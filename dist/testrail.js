@@ -84,7 +84,7 @@ var TestRail = /** @class */ (function () {
                 console.log(
                   '\n',
                   ` - Results are published to ${chalk.magenta(
-                    "https://" + domain + "/index.php?/runs/view/" + linkId
+                    domain + "/index.php?/runs/view/" + linkId
                     )}`,
                   '\n'
                 );
