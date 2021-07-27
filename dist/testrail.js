@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios = require('axios');
 var chalk = require('chalk');
+var https = require('https');
 
 var TestRail = /** @class */ (function () {
     function TestRail(options) {
