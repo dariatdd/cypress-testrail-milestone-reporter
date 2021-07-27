@@ -12,10 +12,15 @@ var TestRail = /** @class */ (function () {
     TestRail.prototype.createRun = function (name, description) {
       var _this = this
 
+      const httpsAgent = new https.Agent({
+        rejectUnauthorized: false
+      })
+
       axios({
           method: 'post',
           url: this.base + "/add_run/" + this.options.projectId,
           headers: { 'Content-Type': 'application/json' },
+          httpsAgent : httpsAgent,
           auth: {
               username: this.options.username,
               password: this.options.password,
@@ -44,10 +49,15 @@ var TestRail = /** @class */ (function () {
             return;
         }
 
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false
+          })
+
         axios({
             method: 'post',
             url: this.base + "/delete_run/" + this.runId,
             headers: { 'Content-Type': 'application/json' },
+            httpsAgent : httpsAgent,
             auth: {
                 username: this.options.username,
                 password: this.options.password,
@@ -68,10 +78,15 @@ var TestRail = /** @class */ (function () {
 
         var linkId = this.runId
 
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false
+          })
+
         axios({
             method: 'post',
             url: this.base + "/add_results_for_cases/" + this.runId,
             headers: { 'Content-Type': 'application/json' },
+            httpsAgent : httpsAgent,
             auth: {
                 username: this.options.username,
                 password: this.options.password,
