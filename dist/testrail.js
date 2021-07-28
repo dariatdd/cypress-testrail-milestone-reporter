@@ -1,4 +1,5 @@
 "use strict";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios = require('axios');
 var chalk = require('chalk');
