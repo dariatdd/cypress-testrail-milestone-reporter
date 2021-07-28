@@ -4,6 +4,8 @@ var axios = require('axios');
 var chalk = require('chalk');
 var https = require('https');
 
+https.globalAgent.options.rejectUnauthorized = false;
+
 var TestRail = /** @class */ (function () {
     function TestRail(options) {
         this.options = options;
