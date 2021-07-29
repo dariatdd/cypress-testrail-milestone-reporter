@@ -141,9 +141,6 @@ var TestRail = /** @class */ (function () {
     };
 
     TestRail.prototype.getCases = function () {
-
-        var domain = this.options.domain
-
         if (this.options.createTestRun == 'no') {
             this.runId = this.options.runId
         } else if (this.runId == 'undefined'){
@@ -166,6 +163,7 @@ var TestRail = /** @class */ (function () {
             },
 
         }).then(function (response) {
+            console.log(response)
             if (response.status == 200) {
                 var cases = [];
                 JSON.parse(j, (key, value) => key === 'case_id' ? (cases.push(value)) : value);
