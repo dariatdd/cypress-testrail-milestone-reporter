@@ -23,6 +23,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
     function CypressTestRailReporter(runner, options) {
         var _this = _super.call(this, runner) || this;
         _this.results = [];
+        _this.actualCaseIds = [];
         var reporterOptions = options.reporterOptions;
         _this.testRail = new testrail_1.TestRail(reporterOptions);
         _this.validate(reporterOptions, 'domain');
@@ -54,6 +55,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             var caseIds = shared_1.titleToCaseIds(test.title);
             if (caseIds.length > 0) {
                 var results = caseIds.map(function (caseId) {
+                    _this.actualCaseIds.push(case_id);
                     return {
                         case_id: caseId,
                         status_id: testrail_interface_1.Status.Passed,
@@ -69,6 +71,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             var caseIds = shared_1.titleToCaseIds(test.title);
             if (caseIds.length > 0) {
                 var results = caseIds.map(function (caseId) {
+                    _this.actualCaseIds.push(case_id);
                     return {
                         case_id: caseId,
                         status_id: testrail_interface_1.Status.Failed,
@@ -89,6 +92,9 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
                 }
                 return;
             }
+            var existingCases = _this.testRail.getCases();
+            existingCases.concat(_this.actualCaseIds);
+            console.log(existingCases);
             _this.testRail.publishResults(_this.results);
 
         });

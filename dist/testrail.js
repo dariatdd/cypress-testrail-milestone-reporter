@@ -111,6 +111,44 @@ var TestRail = /** @class */ (function () {
         }).catch(function (error) { return console.error(error); });
     };
 
+    TestRail.prototype.getCases = function () {
+
+        var domain = this.options.domain
+
+        if (this.options.createTestRun == 'no') {
+            this.runId = this.options.runId
+        } else if (this.runId == 'undefined'){
+            console.error("runId is undefined.");
+            return;
+        }
+
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false
+          })
+
+        axios({
+            method: 'get',
+            url: this.base + "/get_tests/" + this.runId,
+            headers: { 'Content-Type': 'application/json' },
+            httpsAgent : httpsAgent,
+            auth: {
+                username: this.options.username,
+                password: this.options.password,
+            },
+
+        }).then(function (response) {
+            if (response.status == 200) {
+                var cases = [];
+                JSON.parse(j, (key, value) => key === 'case_id' ? (cases.push(value)) : value);
+                console.log(cases);
+                return cases;
+            }
+        }).catch(function (error) { 
+            console.error(error);
+            return [];
+        });
+    };
+
     return TestRail;
   }());
 exports.TestRail = TestRail;
