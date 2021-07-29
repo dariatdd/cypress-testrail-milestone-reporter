@@ -92,9 +92,12 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
                 }
                 return;
             }
+            console.log("!!!!!!!!!!!!!!!!!!!!");
             var existingCases = _this.testRail.getCases();
             existingCases.concat(_this.actualCaseIds);
             console.log(existingCases);
+            _this.testRail.update_run(existingCases);
+            
             _this.testRail.publishResults(_this.results);
 
         });

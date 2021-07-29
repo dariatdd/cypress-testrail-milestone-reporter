@@ -69,6 +69,35 @@ var TestRail = /** @class */ (function () {
         }).catch(function (error) { return console.error(error); });
     };
 
+    TestRail.prototype.updateRun = function (cases) {
+
+        if (this.options.createTestRun == 'no') {
+            this.runId = this.options.runId
+        } else if (this.runId == 'undefined'){
+            console.error("runId is undefined.");
+            return;
+        }
+
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false
+          })
+
+        axios({
+            method: 'post',
+            url: this.base + "/update_run/" + this.runId,
+            headers: { 'Content-Type': 'application/json' },
+            httpsAgent : httpsAgent,
+            auth: {
+                username: this.options.username,
+                password: this.options.password,
+            },
+            data: JSON.stringify({
+                include_all: false,
+                case_ids: cases,
+            }),
+        }).catch(function (error) { return console.error(error); });
+    };
+
     TestRail.prototype.publishResults = function (results) {
 
         var domain = this.options.domain
