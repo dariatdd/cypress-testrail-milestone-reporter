@@ -83,7 +83,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             var _a;
         });
         
-        runner.on('end', function () {
+        runner.on('end', async function () {
             if (_this.results.length == 0) {
                 console.log('\n', chalk.magenta.underline.bold('(TestRail Reporter)'));
                 console.warn('\n', 'No testcases were matched. Ensure that your tests are declared correctly and matches Cxxx', '\n');
@@ -92,13 +92,12 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
                 }
                 return;
             }
-            console.log("!!!!!!!!!!!!!!!!!!!!");
             var existingCases = [];
-            existingCases = _this.testRail.getCases();
-            existingCases.concat(_this.actualCaseIds);
-            console.log(existingCases);
-            _this.testRail.update_run(existingCases);
 
+            existingCases = await _this.testRail.getCases();
+            let allCases = existingCases.concat(_this.actualCaseIds);
+            
+            await _this.testRail.updateRun(allCases);
             _this.testRail.publishResults(_this.results);
 
         });

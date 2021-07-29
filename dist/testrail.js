@@ -69,7 +69,7 @@ var TestRail = /** @class */ (function () {
         }).catch(function (error) { return console.error(error); });
     };
 
-    TestRail.prototype.updateRun = function (cases) {
+    TestRail.prototype.updateRun = async function (cases) {
 
         if (this.options.createTestRun == 'no') {
             this.runId = this.options.runId
@@ -77,25 +77,36 @@ var TestRail = /** @class */ (function () {
             console.error("runId is undefined.");
             return;
         }
-
+        var path = this.base;
+        var runId = this.runId;
+        var options = this.options;
         const httpsAgent = new https.Agent({
             rejectUnauthorized: false
           })
 
-        axios({
-            method: 'post',
-            url: this.base + "/update_run/" + this.runId,
-            headers: { 'Content-Type': 'application/json' },
-            httpsAgent : httpsAgent,
-            auth: {
-                username: this.options.username,
-                password: this.options.password,
-            },
-            data: JSON.stringify({
-                include_all: false,
-                case_ids: cases,
-            }),
-        }).catch(function (error) { return console.error(error); });
+        let promise = new Promise(function (resolve, reject) {
+            axios({
+                method: 'post',
+                url: path + "/update_run/" + runId,
+                headers: { 'Content-Type': 'application/json' },
+                httpsAgent : httpsAgent,
+                auth: {
+                    username: options.username,
+                    password: options.password,
+                },
+                data: JSON.stringify({
+                    include_all: false,
+                    case_ids: cases,
+                }),
+            }).then(function (response) {
+                resolve();
+            }).catch(function (error) { 
+                reject();
+                return console.error(error); 
+            });
+        });
+
+        let result = await promise;
     };
 
     TestRail.prototype.publishResults = function (results) {
@@ -140,40 +151,47 @@ var TestRail = /** @class */ (function () {
         }).catch(function (error) { return console.error(error); });
     };
 
-    TestRail.prototype.getCases = function () {
+    TestRail.prototype.getCases = async function () {
         if (this.options.createTestRun == 'no') {
             this.runId = this.options.runId
         } else if (this.runId == 'undefined'){
             console.error("runId is undefined.");
             return;
         }
-
+        var cases = [];
         const httpsAgent = new https.Agent({
             rejectUnauthorized: false
           })
+        var path = this.base;
+        var runId = this.runId;
+        var options = this.options;
+        let promise = new Promise(function (resolve, reject) {
+            axios({
+                method: 'get',
+                url: path + "/get_tests/" + runId,
+                headers: { 'Content-Type': 'application/json' },
+                httpsAgent : httpsAgent,
+                auth: {
+                    username: options.username,
+                    password: options.password,
+                },
 
-        axios({
-            method: 'get',
-            url: this.base + "/get_tests/" + this.runId,
-            headers: { 'Content-Type': 'application/json' },
-            httpsAgent : httpsAgent,
-            auth: {
-                username: this.options.username,
-                password: this.options.password,
-            },
-
-        }).then(function (response) {
-            console.log(response)
-            if (response.status == 200) {
-                var cases = [];
-                JSON.parse(j, (key, value) => key === 'case_id' ? (cases.push(value)) : value);
-                console.log(cases);
-                return cases;
-            }
-        }).catch(function (error) { 
-            console.error(error);
-            return [];
+            }).then(function (response) {
+                if (response.status == 200) {
+                    if(response.data){
+                        cases = response.data.map(function(item) { return item["case_id"]; });
+                        resolve(cases);
+                    }
+                    
+                }
+            }).catch(function (error) { 
+                console.error(error);
+                reject([]);
+            });
         });
+
+        let result = await promise;
+        return result;
     };
 
     return TestRail;
