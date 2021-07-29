@@ -55,7 +55,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             var caseIds = shared_1.titleToCaseIds(test.title);
             if (caseIds.length > 0) {
                 var results = caseIds.map(function (caseId) {
-                    _this.actualCaseIds.push(case_id);
+                    _this.actualCaseIds.push(caseId);
                     return {
                         case_id: caseId,
                         status_id: testrail_interface_1.Status.Passed,
@@ -71,7 +71,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             var caseIds = shared_1.titleToCaseIds(test.title);
             if (caseIds.length > 0) {
                 var results = caseIds.map(function (caseId) {
-                    _this.actualCaseIds.push(case_id);
+                    _this.actualCaseIds.push(caseId);
                     return {
                         case_id: caseId,
                         status_id: testrail_interface_1.Status.Failed,
@@ -97,7 +97,7 @@ var CypressTestRailReporter = /** @class */ (function (_super) {
             existingCases.concat(_this.actualCaseIds);
             console.log(existingCases);
             _this.testRail.update_run(existingCases);
-            
+
             _this.testRail.publishResults(_this.results);
 
         });
